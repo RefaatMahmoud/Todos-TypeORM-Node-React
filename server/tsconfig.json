@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+      "module": "commonjs",
+      "declaration": true,
+      "removeComments": true,
+      "target": "es2016",
+      "sourceMap": true,
+      "rootDir": "./src",
+      "outDir": "./dist",
+      "baseUrl": "./",
+      "incremental": true,
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop":true
+      // "allowJs": true
+  }
+}
