@@ -3,5 +3,5 @@
 ### server
 ##### => replace .env.example to .env 
 ##### $ npm run start
-##### $ ts -w
+##### $ tsc -w
 
