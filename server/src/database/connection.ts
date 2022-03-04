@@ -5,11 +5,11 @@ import { createConnection } from "typeorm";
 const connectToDB = async () => {
   await createConnection({
     type: "postgres",
-    host: "localhost",
-    port: 5432,
-    username: "root",
-    password: "123456",
-    database: "todos-db",
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT),
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     entities: [Todo, User],
     synchronize: true,
     logging: false,
