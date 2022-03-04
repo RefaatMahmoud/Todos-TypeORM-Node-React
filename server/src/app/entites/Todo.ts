@@ -1,17 +1,9 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  BaseEntity,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import User from "./User";
+import { Base } from "./utils/Base";
 
 @Entity("todos")
-export class Todo extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Todo extends Base {
   @Column({
     type: "varchar",
     length: "20",
@@ -32,9 +24,7 @@ export class Todo extends BaseEntity {
   })
   is_active: boolean;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
+  @ManyToOne(() => User, (user) => user.todos)
+  @JoinColumn({ name: "user_id" })
+  user: User;
 }

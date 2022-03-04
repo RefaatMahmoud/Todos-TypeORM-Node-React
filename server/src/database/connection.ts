@@ -1,6 +1,7 @@
 import "reflect-metadata";
-import { createConnection } from "typeorm";
 import { Todo } from "../app/entites/Todo";
+import User from "../app/entites/User";
+import { createConnection } from "typeorm";
 const connectToDB = async () => {
   await createConnection({
     type: "postgres",
@@ -9,7 +10,7 @@ const connectToDB = async () => {
     username: "root",
     password: "123456",
     database: "todos-db",
-    entities: [Todo],
+    entities: [Todo, User],
     synchronize: true,
     logging: false,
   })
@@ -17,7 +18,7 @@ const connectToDB = async () => {
       console.log("connected with db successfully ✅");
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error);
       throw new Error("unable to connect with db 👎");
     });
 };

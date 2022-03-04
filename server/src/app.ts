@@ -5,7 +5,8 @@ import cors from "cors";
 import helmet from "helmet";
 import "reflect-metadata";
 import { connectToDB } from "./database/connection";
-import { todo_routes } from "./routes/todo_routes";
+import { TodoRoutes } from "./routes/TodoRoutes";
+import { UserRoutes } from "./routes/UserRoutes";
 
 // App variables
 dotenv.config();
@@ -20,7 +21,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 //routes & handlers
-app.use(todo_routes);
+app.use(TodoRoutes);
+app.use(UserRoutes);
+
 app.get("/", (req: Request, res: Response): void => {
   res.send("Hello Typescript with Node.js!");
 });

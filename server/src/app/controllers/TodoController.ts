@@ -1,9 +1,24 @@
 import { Todo } from "../entites/Todo";
 import { Request, Response } from "express";
+import User from "../entites/User";
 class TodoController {
   getAll = async (req: Request, res: Response) => {
     try {
-      const todos = await Todo.find();
+      const [todos, todosCount] = await Todo.findAndCount({
+        relations: ["user"],
+      });
+      res.send({
+        todos,
+        todosCount,
+      });
+    } catch (e) {
+      res.status(404).send({ message: e.message });
+    }
+  };
+  show = async (req: Request, res: Response) => {
+    try {
+      const todoID: number = parseInt(req.params.id);
+      const todos = await Todo.findOne(todoID);
       res.send(todos);
     } catch (e) {
       res.status(404).send({ message: e.message });
@@ -14,6 +29,7 @@ class TodoController {
       title: req.body.title,
       description: req.body.description,
       is_active: req.body?.is_active || true,
+      user: await User.findOne(req.body.user_id),
     };
     await Todo.create(data)
       .save()

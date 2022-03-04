@@ -32,7 +32,8 @@ const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 require("reflect-metadata");
 const connection_1 = require("./database/connection");
-const todo_routes_1 = require("./routes/todo_routes");
+const TodoRoutes_1 = require("./routes/TodoRoutes");
+const UserRoutes_1 = require("./routes/UserRoutes");
 dotenv.config();
 if (!process.env.PORT) {
     process.exit(1);
@@ -42,7 +43,8 @@ const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use(todo_routes_1.todo_routes);
+app.use(TodoRoutes_1.TodoRoutes);
+app.use(UserRoutes_1.UserRoutes);
 app.get("/", (req, res) => {
     res.send("Hello Typescript with Node.js!");
 });
