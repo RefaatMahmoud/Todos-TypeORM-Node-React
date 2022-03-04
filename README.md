@@ -1,7 +1,7 @@
 # Todos-TypeORM-Node-React Task
 
 ### server
-##### replace .env.example to .env 
+##### => replace .env.example to .env 
 ##### $ npm run start
 ##### $ ts -w
 
