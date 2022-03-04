@@ -8,3 +8,8 @@ export type todoItemType = {
     name: String;
   };
 };
+
+export type userType = {
+  id: Key;
+  name: String;
+};

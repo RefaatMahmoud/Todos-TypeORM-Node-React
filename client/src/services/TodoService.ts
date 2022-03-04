@@ -1,9 +1,8 @@
-import axios from "axios";
-import env from "react-dotenv";
-class TodoService {
-  getAll = async () => {
-    return await axios.get(`${env.API_URL}/todo`);
-  };
+import BaseService from "./BaseService";
+const apiEndPoint = "todo";
+class TodoService extends BaseService {
+  constructor() {
+    super(apiEndPoint);
+  }
 }
-
 export default TodoService;

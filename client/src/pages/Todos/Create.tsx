@@ -1,14 +1,41 @@
-import { Key, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
-const CreateTodo = () => {
+import TodoService from "../../services/TodoService";
+import UserService from "../../services/UserService";
+import { userType } from "../../types/common";
+
+
+const CreateTodo = (props: any) => {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState({
     title: "",
     description: "",
     user: "",
   });
-  useEffect(() => {}, []);
+  const [users, setUsers] = useState([]);
 
-  const addTodo = () => {};
+  const getUsersDropdown = useCallback(async () => {
+    const { data } = await new UserService().getList();
+    setUsers(data);
+  }, []);
+
+  useEffect(() => {
+    getUsersDropdown();
+  }, [getUsersDropdown]);
+
+  const addTodo = async () => {
+    try {
+      await new TodoService().create(formState);
+      navigate("/todos");
+      toast.success("Todo is created successfully");
+    } catch (e: any) {
+      toast.error(
+        e.response?.data?.message || "there a problem in todo creation "
+      );
+    }
+  };
 
   const submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -35,6 +62,7 @@ const CreateTodo = () => {
             placeholder="todo title"
             type="text"
             onChange={(e) => bindingFieldsToFormState(e)}
+            required
           />
         </FormGroup>
         <FormGroup>
@@ -45,27 +73,29 @@ const CreateTodo = () => {
             placeholder="todo description"
             type="textarea"
             onChange={(e) => bindingFieldsToFormState(e)}
+            required
           />
         </FormGroup>
         <FormGroup>
-          <Label for="authors">Users</Label>
+          <Label for="users">Users</Label>
           <Input
-            id="authors"
-            name="authorId"
+            id="users"
+            name="user"
             type="select"
             onChange={(e) => bindingFieldsToFormState(e)}
             placeholder="choose"
             defaultValue=""
+            required
           >
             <option value="" disabled>
               Select your option
             </option>
-            {/* {users &&
+            {users &&
               users.map((user: userType) => (
                 <option key={user.id} value={user.id}>
                   {user.name}
                 </option>
-              ))} */}
+              ))}
           </Input>
         </FormGroup>
         <Button>Submit</Button>

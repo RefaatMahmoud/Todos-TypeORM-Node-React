@@ -8,7 +8,7 @@ const ListTodo = () => {
   const [todos, setTodos] = useState([]);
 
   const getAllTodos = useCallback(async () => {
-    const { data } = await new TodoService().getAll();
+    const { data } = await new TodoService().getList();
     setTodos(data.todos);
   }, []);
 
