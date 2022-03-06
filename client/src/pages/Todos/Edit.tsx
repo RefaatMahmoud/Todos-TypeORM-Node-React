@@ -1,34 +1,46 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import TodoService from "../../services/TodoService";
 import UserService from "../../services/UserService";
 import { userType } from "../../types/common";
 
-const CreateTodo = () => {
+const EditTodo = () => {
+  let { id } = useParams();
   const navigate = useNavigate();
   const [formState, setFormState] = useState({
     title: "",
     description: "",
-    user: "",
+    user: {
+      id: "",
+    },
   });
   const [users, setUsers] = useState([]);
-
   const getUsersDropdown = useCallback(async () => {
     const { data } = await new UserService().getList();
     setUsers(data);
   }, []);
+  const getTodoData = useCallback(async () => {
+    const { data } = await new TodoService().show(id);
+    setFormState(data);
+  }, []);
 
   useEffect(() => {
     getUsersDropdown();
-  }, [getUsersDropdown]);
+    getTodoData();
+  }, [getTodoData, getUsersDropdown]);
 
-  const addTodo = async (): Promise<void> => {
+  const submitForm = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
     try {
-      await new TodoService().create(formState);
+      const body = prepareUpdateFormRequestData();
+      console.log(body);
+      await new TodoService().update(id, body);
       navigate("/todos");
-      toast.success("Todo is created successfully");
+      toast.success("Todo is updated successfully");
     } catch (e: any) {
       toast.error(
         e.response?.data?.message || "there a problem in todo creation "
@@ -36,9 +48,12 @@ const CreateTodo = () => {
     }
   };
 
-  const submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    addTodo();
+  const prepareUpdateFormRequestData = () => {
+    return {
+      title: formState.title,
+      description: formState.description,
+      user: formState.user,
+    };
   };
 
   const bindingFieldsToFormState = (
@@ -61,6 +76,7 @@ const CreateTodo = () => {
             placeholder="todo title"
             type="text"
             onChange={(e) => bindingFieldsToFormState(e)}
+            defaultValue={formState.title}
             required
           />
         </FormGroup>
@@ -72,6 +88,7 @@ const CreateTodo = () => {
             placeholder="todo description"
             type="textarea"
             onChange={(e) => bindingFieldsToFormState(e)}
+            defaultValue={formState.description}
             required
           />
         </FormGroup>
@@ -83,7 +100,7 @@ const CreateTodo = () => {
             type="select"
             onChange={(e) => bindingFieldsToFormState(e)}
             placeholder="choose"
-            defaultValue=""
+            value={formState.user.id}
             required
           >
             <option value="" disabled>
@@ -103,4 +120,4 @@ const CreateTodo = () => {
   );
 };
 
-export default CreateTodo;
+export default EditTodo;

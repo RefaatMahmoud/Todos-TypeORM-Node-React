@@ -1,6 +1,7 @@
 import { Todo } from "../entites/Todo";
 import { Request, Response } from "express";
 import User from "../entites/User";
+import { createQueryBuilder, getConnection } from "typeorm";
 class TodoController {
   getAll = async (req: Request, res: Response) => {
     try {
@@ -18,8 +19,17 @@ class TodoController {
   show = async (req: Request, res: Response) => {
     try {
       const todoID: number = parseInt(req.params.id);
-      const todos = await Todo.findOne(todoID);
-      res.send(todos);
+      // const todo = await Todo.findOne({
+      //   where: { id: todoID },
+      //   relations: ["user"],
+      //   select: ["id", "title", "description"],
+      // });
+      const todo = await createQueryBuilder(Todo, "todos")
+        .leftJoin("todos.user", "user")
+        .select(["todos.id", "todos.title", "todos.description", "user.id"])
+        .where("todos.id = :id", { id: todoID })
+        .getOne();
+      res.send(todo);
     } catch (e) {
       res.status(404).send({ message: e.message });
     }

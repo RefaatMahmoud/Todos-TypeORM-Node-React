@@ -1,6 +1,6 @@
 import { Key, useCallback } from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Table } from "reactstrap";
 import TodoService from "../../services/TodoService";
 import { todoItemType } from "../../types/common";
@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 const ListTodo = () => {
+  const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const todoServiceInstance = new TodoService();
   const getAllTodos = useCallback(async () => {
@@ -56,6 +57,7 @@ const ListTodo = () => {
                     icon={faPencil}
                     className={"text-primary"}
                     style={{ marginLeft: "15px", cursor: "pointer" }}
+                    onClick={() => navigate(`/todo/edit/${todo.id}`)}
                   ></FontAwesomeIcon>
                   <FontAwesomeIcon
                     icon={faTrash}
