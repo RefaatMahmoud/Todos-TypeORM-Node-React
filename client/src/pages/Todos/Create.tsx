@@ -6,8 +6,7 @@ import TodoService from "../../services/TodoService";
 import UserService from "../../services/UserService";
 import { userType } from "../../types/common";
 
-
-const CreateTodo = (props: any) => {
+const CreateTodo = () => {
   const navigate = useNavigate();
   const [formState, setFormState] = useState({
     title: "",
