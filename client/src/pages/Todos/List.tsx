@@ -1,14 +1,12 @@
-import { Key, useCallback } from "react";
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Table } from "reactstrap";
+import { createContext, Key, useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import TodoTable from "../../components/Todos/Table";
 import TodoService from "../../services/TodoService";
 import { todoItemType } from "../../types/common";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
+export const TodoContext = createContext({});
+
 const ListTodo = () => {
-  const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const todoServiceInstance = new TodoService();
   const getAllTodos = useCallback(async () => {
@@ -31,48 +29,20 @@ const ListTodo = () => {
     }
   };
   return (
-    <div className="container mt-5">
-      <Link to={"/todo/create"} className="btn btn-primary pull-right">
-        Create Todo
-      </Link>
-      {!todos && <div>Loading ..</div>}
-      {todos && (
-        <Table striped>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>User</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {todos.map((todo: todoItemType) => (
-              <tr key={todo.id}>
-                <td>{todo.title}</td>
-                <td>{todo.description}</td>
-                <td>{todo?.user?.name}</td>
-                <td>
-                  <FontAwesomeIcon
-                    icon={faPencil}
-                    className={"text-primary"}
-                    style={{ marginLeft: "15px", cursor: "pointer" }}
-                    onClick={() => navigate(`/todo/edit/${todo.id}`)}
-                  ></FontAwesomeIcon>
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    className="text-danger"
-                    style={{ marginLeft: "15px", cursor: "pointer" }}
-                    onClick={() => deleteTodo(todo.id)}
-                  ></FontAwesomeIcon>
-                </td>
-                <td></td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
-    </div>
+    <TodoContext.Provider
+      value={{
+        todos,
+        deleteTodo,
+      }}
+    >
+      <div className="container mt-5">
+        <Link to={"/todo/create"} className="btn btn-primary pull-right">
+          Create Todo
+        </Link>
+        {!todos && <div>Loading ..</div>}
+        {todos && <TodoTable />}
+      </div>
+    </TodoContext.Provider>
   );
 };
 
