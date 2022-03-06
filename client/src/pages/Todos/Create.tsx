@@ -11,7 +11,7 @@ const CreateTodo = () => {
   const [formState, setFormState] = useState({
     title: "",
     description: "",
-    user: "",
+    user_id: "",
   });
   const [users, setUsers] = useState([]);
 
@@ -79,7 +79,7 @@ const CreateTodo = () => {
           <Label for="users">Users</Label>
           <Input
             id="users"
-            name="user"
+            name="user_id"
             type="select"
             onChange={(e) => bindingFieldsToFormState(e)}
             placeholder="choose"

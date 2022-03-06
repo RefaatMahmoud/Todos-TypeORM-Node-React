@@ -37,7 +37,6 @@ const EditTodo = () => {
     e.preventDefault();
     try {
       const body = prepareUpdateFormRequestData();
-      console.log(body);
       await new TodoService().update(id, body);
       navigate("/todos");
       toast.success("Todo is updated successfully");
@@ -52,7 +51,7 @@ const EditTodo = () => {
     return {
       title: formState.title,
       description: formState.description,
-      user: formState.user,
+      user_id: formState.user,
     };
   };
 
