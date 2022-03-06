@@ -1,7 +1,8 @@
-import { Todo } from "../entites/Todo";
 import { Request, Response } from "express";
+import { createQueryBuilder } from "typeorm";
+import { Todo } from "../entites/Todo";
 import User from "../entites/User";
-import { createQueryBuilder, getConnection } from "typeorm";
+import TodoRepository from "../repositories/TodoRepository";
 class TodoController {
   getAll = async (req: Request, res: Response) => {
     try {
@@ -19,22 +20,13 @@ class TodoController {
   show = async (req: Request, res: Response) => {
     try {
       const todoID: number = parseInt(req.params.id);
-      // const todo = await Todo.findOne({
-      //   where: { id: todoID },
-      //   relations: ["user"],
-      //   select: ["id", "title", "description"],
-      // });
-      const todo = await createQueryBuilder(Todo, "todos")
-        .leftJoin("todos.user", "user")
-        .select(["todos.id", "todos.title", "todos.description", "user.id"])
-        .where("todos.id = :id", { id: todoID })
-        .getOne();
+      const todo = await TodoRepository.find(todoID);
       res.send(todo);
     } catch (e) {
       res.status(404).send({ message: e.message });
     }
   };
-  store = async (req: Request, res: Response): Promise<void> => {
+  store = async (req: Request, res: Response) => {
     const data = {
       title: req.body.title,
       description: req.body.description,
@@ -57,6 +49,7 @@ class TodoController {
       title: req.body.title,
       description: req.body.description,
       is_active: req.body?.is_active || true,
+      user: await User.findOne(req.body.user_id),
     };
     const todoID = req.params.id;
     await Todo.update(todoID, data)
@@ -91,4 +84,5 @@ class TodoController {
     });
   };
 }
+
 export default new TodoController();
