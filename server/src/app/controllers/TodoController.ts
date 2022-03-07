@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
-import { createQueryBuilder } from "typeorm";
 import { Todo } from "../entites/Todo";
 import User from "../entites/User";
 import TodoRepository from "../repositories/TodoRepository";
 class TodoController {
   getAll = async (req: Request, res: Response) => {
     try {
-      const [todos, todosCount] = await Todo.findAndCount({
-        relations: ["user"],
-      });
+      const [todos, count] = await TodoRepository.getAll();
+      // const [todos, todosCount] = await Todo.findAndCount({
+      //   relations: ["user"],
+      // });
       res.send({
         todos,
-        todosCount,
+        count,
       });
     } catch (e) {
       res.status(404).send({ message: e.message });

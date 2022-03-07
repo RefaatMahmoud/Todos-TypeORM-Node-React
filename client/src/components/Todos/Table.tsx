@@ -13,6 +13,7 @@ const TodoTable = () => {
     <Table striped>
       <thead>
         <tr>
+          <th>#</th>
           <th>Title</th>
           <th>Description</th>
           <th>User</th>
@@ -22,6 +23,7 @@ const TodoTable = () => {
       <tbody>
         {contextData.todos.map((todo: todoItemType) => (
           <tr key={todo.id}>
+            <td>{todo.id}</td>
             <td>{todo.title}</td>
             <td>{todo.description}</td>
             <td>{todo?.user?.name}</td>
