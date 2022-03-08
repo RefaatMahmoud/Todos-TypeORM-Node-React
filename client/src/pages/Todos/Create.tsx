@@ -5,6 +5,8 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import TodoService from "../../services/TodoService";
 import UserService from "../../services/UserService";
 import { userType } from "../../types/common";
+const todoServiceInstance = new TodoService();
+const userServiceInstance = new UserService();
 
 const CreateTodo = () => {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ const CreateTodo = () => {
   const [users, setUsers] = useState([]);
 
   const getUsersDropdown = useCallback(async () => {
-    const { data } = await new UserService().getList();
+    const { data } = await userServiceInstance.getList();
     setUsers(data);
   }, []);
 
@@ -26,7 +28,7 @@ const CreateTodo = () => {
 
   const addTodo = async (): Promise<void> => {
     try {
-      await new TodoService().create(formState);
+      await todoServiceInstance.create(formState);
       navigate("/todos");
       toast.success("Todo is created successfully");
     } catch (e: any) {

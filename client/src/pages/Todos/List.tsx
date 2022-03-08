@@ -5,10 +5,11 @@ import TodoTable from "../../components/Todos/Table";
 import TodoService from "../../services/TodoService";
 import { todoItemType } from "../../types/common";
 export const TodoContext = createContext({});
+const todoServiceInstance = new TodoService();
 
 const ListTodo = () => {
   const [todos, setTodos] = useState([]);
-  const todoServiceInstance = new TodoService();
+
   const getAllTodos = useCallback(async () => {
     const { data } = await todoServiceInstance.getList();
     setTodos(data.todos);

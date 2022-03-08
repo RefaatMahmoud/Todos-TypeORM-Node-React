@@ -5,6 +5,8 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import TodoService from "../../services/TodoService";
 import UserService from "../../services/UserService";
 import { userType } from "../../types/common";
+const todoServiceInstance = new TodoService();
+const userServiceInstance = new UserService();
 
 const EditTodo = () => {
   let { id } = useParams();
@@ -18,11 +20,11 @@ const EditTodo = () => {
   });
   const [users, setUsers] = useState([]);
   const getUsersDropdown = useCallback(async () => {
-    const { data } = await new UserService().getList();
+    const { data } = await userServiceInstance.getList();
     setUsers(data);
   }, []);
   const getTodoData = useCallback(async () => {
-    const { data } = await new TodoService().show(id);
+    const { data } = await todoServiceInstance.show(id);
     setFormState(data);
   }, []);
 
@@ -37,7 +39,7 @@ const EditTodo = () => {
     e.preventDefault();
     try {
       const body = prepareUpdateFormRequestData();
-      await new TodoService().update(id, body);
+      await todoServiceInstance.update(id, body);
       navigate("/todos");
       toast.success("Todo is updated successfully");
     } catch (e: any) {
