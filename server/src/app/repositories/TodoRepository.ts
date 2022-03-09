@@ -1,4 +1,4 @@
-import { createQueryBuilder } from "typeorm";
+import { createQueryBuilder, ObjectID } from "typeorm";
 import { Todo } from "../entites/Todo";
 
 class TodoRepository {
@@ -17,6 +17,16 @@ class TodoRepository {
       .where("todos.id = :id", { id })
       .getOne();
     return todo;
+  };
+  store = async (data: {}) => await Todo.create(data).save();
+  update = async (id: number, data: {}) => await Todo.update(id, data);
+  delete = async (id: number) => await Todo.delete(id);
+  isExists = async (id: number) => {
+    return await createQueryBuilder(Todo, "todos")
+      .where("todos.id = :id", {
+        id,
+      })
+      .getCount();
   };
 }
 

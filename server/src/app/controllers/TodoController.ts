@@ -6,9 +6,6 @@ class TodoController {
   getAll = async (req: Request, res: Response) => {
     try {
       const [todos, count] = await TodoRepository.getAll();
-      // const [todos, todosCount] = await Todo.findAndCount({
-      //   relations: ["user"],
-      // });
       res.send({
         todos,
         count,
@@ -19,8 +16,8 @@ class TodoController {
   };
   show = async (req: Request, res: Response) => {
     try {
-      const todoID: number = parseInt(req.params.id);
-      const todo = await TodoRepository.find(todoID);
+      const todoId: Number = parseInt(req.params.id);
+      const todo = await TodoRepository.find(todoId);
       res.send(todo);
     } catch (e) {
       res.status(404).send({ message: e.message });
@@ -33,8 +30,7 @@ class TodoController {
       is_active: req.body?.is_active || true,
       user: await User.findOne(req.body.user_id),
     };
-    await Todo.create(data)
-      .save()
+    await TodoRepository.store(data)
       .then((data) => {
         res.send(data);
       })
@@ -51,8 +47,8 @@ class TodoController {
       is_active: req.body?.is_active || true,
       user: await User.findOne(req.body.user_id),
     };
-    const todoID = req.params.id;
-    await Todo.update(todoID, data)
+    const todoID = parseInt(req.params.id);
+    await TodoRepository.update(todoID, data)
       .then(() => {
         res.send({
           message: "updated successfully",
@@ -66,11 +62,11 @@ class TodoController {
   };
   delete = async (req: Request, res: Response): Promise<void> => {
     const todoID: number = parseInt(req.params.id);
-    await Todo.findOne(todoID).then((data) => {
+    await TodoRepository.isExists(todoID).then((data) => {
       if (!data) {
         res.status(400).send({ message: "todo is not exists" });
       }
-      Todo.delete(todoID)
+      TodoRepository.delete(todoID)
         .then(() => {
           res.send({
             message: "deleted successfully",
