@@ -1,6 +1,7 @@
 import User from "../entites/User";
 import { Request, Response } from "express";
 
+//TODO need to apply enhancement as TodoController [apply validation schema , use repository]
 class UserController {
   getAll = async (req: Request, res: Response) => {
     try {

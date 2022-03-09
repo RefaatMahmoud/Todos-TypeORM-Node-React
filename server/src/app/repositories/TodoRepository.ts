@@ -1,7 +1,9 @@
-import { createQueryBuilder, ObjectID } from "typeorm";
+import { createQueryBuilder } from "typeorm";
 import { Todo } from "../entites/Todo";
+import RepositoryBaseInterface from "../interfaces/RepositoryBaseInterface";
+import BaseRepository from "./BaseRepository";
 
-class TodoRepository {
+class TodoRepository extends BaseRepository implements RepositoryBaseInterface {
   getAll = async () => {
     const [todos, count] = await createQueryBuilder(Todo, "todos")
       .leftJoin("todos.user", "user")
@@ -18,16 +20,6 @@ class TodoRepository {
       .getOne();
     return todo;
   };
-  store = async (data: {}) => await Todo.create(data).save();
-  update = async (id: number, data: {}) => await Todo.update(id, data);
-  delete = async (id: number) => await Todo.delete(id);
-  isExists = async (id: number) => {
-    return await createQueryBuilder(Todo, "todos")
-      .where("todos.id = :id", {
-        id,
-      })
-      .getCount();
-  };
 }
 
-export default new TodoRepository();
+export default new TodoRepository(Todo, "todos");
