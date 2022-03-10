@@ -1,0 +1,16 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": "5432",
+  "username": "root",
+  "password": "123456",
+  "database": "todos-db",
+  "synchronize": false,
+  "logging": false,
+  "entities": ["src/app/entites/**/*.ts"],
+  "migrations": ["src/database/migrations/*.ts"],
+  "migrationsTableName": "migrations",
+  "cli": {
+    "migrationsDir": "src/database/migrations"
+  }
+}
